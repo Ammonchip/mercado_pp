@@ -1,9 +1,9 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class JediAcademy extends JFrame {
+public class Mercadinho extends JFrame {
 
-	public JediAcademy() {
+	public Mercadinho() {
 		super("Mercadinho");
 		this.setLayout(null);
 		this.setSize(800, 600);
@@ -39,7 +39,7 @@ public class JediAcademy extends JFrame {
 	}
 
 	public static void main(String args[]) {
-		JediAcademy mainWindow = new JediAcademy();
+		Mercadinho mainWindow = new Mercadinho();
 		// Preencha aqui os dados da janela ..
 		mainWindow.setVisible(true);
 	}
