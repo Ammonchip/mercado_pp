@@ -24,7 +24,7 @@ public class Mercadinho extends JFrame {
         bGer.setBounds(280, 55, 220, 25);
         this.add(bGer);
 
-        JButton bVisao = new JButton("Visão Geral");
+        JButton bVisao = new JButton("Visao Geral");
         bVisao.setBounds(280, 85, 220, 25);
         this.add(bVisao);
 
