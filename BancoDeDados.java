@@ -1,9 +1,10 @@
 import java.sql.*;
 
 public class BancoDeDados {
-  private static String url = "jdbc:mysql://localhost:3306/citacoesbd";
+  private static String url = "jdbc:mysql://localhost";
   private static String user = "root";
   private static String pass = "root";
+  private static String sql = "CREATE DATABASE IF NOT EXISTS citacoesbd";
   protected static Connection conexao = null;
 
   public BancoDeDados() {
@@ -13,6 +14,9 @@ public class BancoDeDados {
   private static boolean conecta() {
     try {
       conexao = DriverManager.getConnection(url, user, pass);
+      PreparedStatement stmt = conexao.prepareStatement(sql); 
+      stmt.execute();
+      
       return true;
     }
     catch (SQLException e) {
