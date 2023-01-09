@@ -15,8 +15,22 @@ public class PersonagemDAO extends BancoDeDados {
     catch (SQLException e) { }
   }
 
+  public boolean adicionarPersonagem(Personagem p) {
+    try {
+      Statement st = conexao.createStatement();
+      st.executeUpdate("INSERT INTO personagens VALUES (NULL, '"
+                       + p.getApelido() + "'," + " '" + p.getNome()
+                       + "', '" + p.getFilme() + "')");
+      return true;
+    } catch (SQLException e) { return false; }
+  }
+
+
+
   public static void main(String args[]) {
     PersonagemDAO personagemDAO = new PersonagemDAO();
+    Personagem personagem = new Personagem("Drax", "Drax the Destroyer", "Guardians of the Galaxy");
+    personagemDAO.adicionarPersonagem(personagem);
     personagemDAO.listarPersonagens();
   }
 }
