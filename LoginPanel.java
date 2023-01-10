@@ -6,33 +6,18 @@ public class LoginPanel extends JPanel{
     private JButton adminloginButton;
     private JButton operatorloginButton;
     private JPanel contentJPanel;
+    
 
     public LoginPanel(JPanel panel) {
         contentJPanel = panel;
         adminloginButton = new JButton("Admin");
         operatorloginButton = new JButton("Operator");
 
-        adminloginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                CardLayout cardLayout = (CardLayout) contentJPanel.getLayout();
-                cardLayout.show(contentJPanel, "AdminPanel");
-            }
-        });
+        adminloginButton.addActionListener(new SwitchToWindow("adminpanel", contentJPanel));
         add(adminloginButton);
 
-        operatorloginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                CardLayout cardLayout = (CardLayout) contentJPanel.getLayout();
-                cardLayout.show(contentJPanel, "OperatorPanel");
-            }
-        });
+        operatorloginButton.addActionListener(new SwitchToWindow("operatorpanel", contentJPanel));
         add(operatorloginButton);
-    }
-
-    @Override
-    public Dimension getPreferredSize()
-    {
-        return (new Dimension(500, 500));
     }
 }
 /*
