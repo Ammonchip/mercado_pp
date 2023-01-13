@@ -1,35 +1,24 @@
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
 import javax.swing.JTextField;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import java.awt.Dimension;
 import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JOptionPane;
 
 public class MercadoWindow {
 
 	public JFrame frmMercadinhoArrochado;
-	private JTextField textField;
+	private JTextField usuario_textField;
 	private JPasswordField passwordField;
 	private JTextField textField_1;
 	private JTextField textField_2;
@@ -68,21 +57,50 @@ public class MercadoWindow {
 		frmMercadinhoArrochado.setTitle("Mercadinho Arrochado");
 		frmMercadinhoArrochado.setBounds(100, 100, 800, 600);
 		frmMercadinhoArrochado.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmMercadinhoArrochado.getContentPane().setLayout(new CardLayout(0, 0));
+		frmMercadinhoArrochado.getContentPane().setLayout(new CardLayout());
 		
 		JPanel login_panel = new JPanel();
 		login_panel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		frmMercadinhoArrochado.getContentPane().add(login_panel, "name_6507864224800");
+		frmMercadinhoArrochado.getContentPane().add(login_panel, "login_panel");
 		login_panel.setLayout(null);
 		
+		JPanel menu_panel = new JPanel();
+		frmMercadinhoArrochado.getContentPane().add(menu_panel, "menu_panel");
+		menu_panel.setLayout(null);
+		
+		JPanel group_panel = new JPanel();
+		group_panel.setBounds(10, 11, 764, 505);
+		menu_panel.add(group_panel);
+		group_panel.setLayout(new CardLayout(0, 0));
+		
 		JButton btnLoginButton = new JButton("Login");
+		btnLoginButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String senha = new String(passwordField.getPassword()).trim();
+				String str_usuario = usuario_textField.getText();
+				UsuariosDAO usuarioDAO = new UsuariosDAO();
+				Usuario usuario = usuarioDAO.getUsuario(str_usuario);
+				if (usuario != null) {
+					if (usuario.getSenha().equals(senha)) {
+						JOptionPane.showMessageDialog(btnLoginButton, "Bem vindo "+usuario.getNome());
+						CardLayout cl = (CardLayout)(frmMercadinhoArrochado.getContentPane().getLayout());
+					    cl.show(frmMercadinhoArrochado.getContentPane(), "menu_panel");
+					    
+					    CardLayout c2 = (CardLayout)(group_panel.getLayout());
+					    c2.show(group_panel, "venda_panel");
+					} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
+				} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
+				
+			}
+		});
+		
 		btnLoginButton.setBounds(277, 358, 297, 42);
 		login_panel.add(btnLoginButton);
 		
-		textField = new JTextField();
-		textField.setBounds(396, 252, 178, 42);
-		login_panel.add(textField);
-		textField.setColumns(10);
+		usuario_textField = new JTextField();
+		usuario_textField.setBounds(396, 252, 178, 42);
+		login_panel.add(usuario_textField);
+		usuario_textField.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Usuário:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -103,9 +121,7 @@ public class MercadoWindow {
 		passwordField.setBounds(396, 305, 178, 42);
 		login_panel.add(passwordField);
 		
-		JPanel menu_panel = new JPanel();
-		frmMercadinhoArrochado.getContentPane().add(menu_panel, "name_7814513695000");
-		menu_panel.setLayout(null);
+		
 		
 		JButton btnNewButton = new JButton("Logout");
 		btnNewButton.setBounds(10, 527, 83, 23);
@@ -131,10 +147,7 @@ public class MercadoWindow {
 		btnNewButton_5.setBounds(236, 527, 131, 23);
 		menu_panel.add(btnNewButton_5);
 		
-		JPanel group_panel = new JPanel();
-		group_panel.setBounds(10, 11, 764, 505);
-		menu_panel.add(group_panel);
-		group_panel.setLayout(new CardLayout(0, 0));
+		
 		
 		JPanel venda_panel = new JPanel();
 		group_panel.add(venda_panel, "name_51328974069800");
@@ -201,7 +214,7 @@ public class MercadoWindow {
 		venda_panel.add(lblNewLabel_12);
 		
 		JButton btnNewButton_7 = new JButton("Finalizar");
-		btnNewButton_7.setBounds(661, 446, 79, 44);
+		btnNewButton_7.setBounds(651, 446, 89, 44);
 		venda_panel.add(btnNewButton_7);
 		
 		JLabel lblNewLabel_13 = new JLabel("Preço Total:");
