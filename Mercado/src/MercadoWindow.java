@@ -28,7 +28,7 @@ import javax.swing.JScrollPane;
 
 public class MercadoWindow {
 
-	private JFrame frmMercadinhoArrochado;
+	public JFrame frmMercadinhoArrochado;
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private JTextField textField_1;
@@ -52,22 +52,6 @@ public class MercadoWindow {
 	private JTextField textField_16;
 	private JTextField textField_17;
 	private JTable table_3;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MercadoWindow window = new MercadoWindow();
-					window.frmMercadinhoArrochado.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
