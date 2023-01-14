@@ -3,6 +3,7 @@ import javax.swing.JPanel;
 import java.awt.CardLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JPasswordField;
@@ -10,6 +11,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -49,16 +51,18 @@ public class MercadoWindow {
 		
 		DefaultTableModel DFT = (DefaultTableModel) tabela.getModel();
 		DFT.setRowCount(0);
-		Vector v2 = new Vector();
+		
 		for (int i = 0; i < listadeprodutos.size(); i++) {
+			Vector v2 = new Vector();
             v2.add(listadeprodutos.get(i).getCodigo());
             v2.add(listadeprodutos.get(i).getDescricao());
             v2.add(listadeprodutos.get(i).getVenda());
             v2.add(listadeprodutos.get(i).getQuantidade());
             v2.add(listadeprodutos.get(i).getMedida());
             v2.add(listadeprodutos.get(i).getCompra());
+            DFT.addRow(v2);
         }
-        DFT.addRow(v2);
+        
 	}
 
 	/**
@@ -258,6 +262,11 @@ public class MercadoWindow {
 		});
 		table_1.getColumnModel().getColumn(0).setPreferredWidth(100);
 		table_1.getColumnModel().getColumn(1).setPreferredWidth(150);
+		DefaultTableModel table_1model = (DefaultTableModel) table_1.getModel();
+		TableRowSorter<DefaultTableModel> sorter;
+		sorter = new TableRowSorter<DefaultTableModel>(table_1model);
+		table_1.setRowSorter(sorter);
+		
 		scrollPane_1.setViewportView(table_1);
 		
 		JLabel lblNewLabel_6 = new JLabel("Filtro de Busca:");
@@ -269,6 +278,22 @@ public class MercadoWindow {
 		textField_4.setBounds(108, 446, 632, 20);
 		pesquisa_panel.add(textField_4);
 		textField_4.setColumns(10);
+		textField_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				JOptionPane.showMessageDialog(null, "funcionou!");
+				RowFilter<DefaultTableModel, Object> rf = null;
+		        //If current expression doesn't parse, don't update.
+		        try {
+		            rf = RowFilter.regexFilter(textField_4.getText(), 0);
+		        } catch (java.util.regex.PatternSyntaxException ex) {
+		            return;
+		        }
+		        sorter.setRowFilter(rf);
+				
+			}
+		});
 		
 		JLabel lblNewLabel_7 = new JLabel("Lista de Produtos e Pesquisa:");
 		lblNewLabel_7.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -623,10 +648,46 @@ public class MercadoWindow {
 		controle_panel.add(btnAddControle);
 		
 		JButton btnRemControle = new JButton("Remover");
+		btnRemControle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Produto produto = new Produto(textConCod.getText(), 
+						  textConDesc.getText(), 
+						  textConMed.getText(), 
+						  Integer.parseInt(textConQuant.getText()),
+						  Float.parseFloat(textConCom.getText()),
+						  Float.parseFloat(textConVen.getText()));
+
+				ProdutoDAO produtoDAO = new ProdutoDAO();
+				if (produtoDAO.remProduto(produto)) {
+				JOptionPane.showMessageDialog(btnAddControle, "Produto removido!");
+				tableUpdate(table_2, produtoDAO.listaProduto());
+
+				}
+				else JOptionPane.showMessageDialog(btnAddControle, "Falha ao remover produto!");
+			}
+		});
 		btnRemControle.setBounds(221, 418, 89, 23);
 		controle_panel.add(btnRemControle);
 		
 		JButton btnAtuControle = new JButton("Atualizar");
+		btnAtuControle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Produto produto = new Produto(textConCod.getText(), 
+						  textConDesc.getText(), 
+						  textConMed.getText(), 
+						  Integer.parseInt(textConQuant.getText()),
+						  Float.parseFloat(textConCom.getText()),
+						  Float.parseFloat(textConVen.getText()));
+
+				ProdutoDAO produtoDAO = new ProdutoDAO();
+				if (produtoDAO.atuProduto(produto)) {
+				JOptionPane.showMessageDialog(btnAddControle, "Produto Atualizado!");
+				tableUpdate(table_2, produtoDAO.listaProduto());
+
+				}
+				else JOptionPane.showMessageDialog(btnAddControle, "Falha ao atualizar produto!");
+			}
+		});
 		btnAtuControle.setBounds(320, 418, 89, 23);
 		controle_panel.add(btnAtuControle);
 		
@@ -661,6 +722,9 @@ public class MercadoWindow {
 			public void actionPerformed(ActionEvent e) {
 				CardLayout c2 = (CardLayout)(group_panel.getLayout());
 			    c2.show(group_panel, "venda_panel");
+			    
+			    ProdutoDAO produtoDAO = new ProdutoDAO();
+				tableUpdate(table_2, produtoDAO .listaProduto());
 			}
 		});
 		btnVenda.setBounds(103, 527, 123, 23);
@@ -671,6 +735,8 @@ public class MercadoWindow {
 			public void actionPerformed(ActionEvent e) {
 				CardLayout c2 = (CardLayout)(group_panel.getLayout());
 			    c2.show(group_panel, "controle_panel");
+			    ProdutoDAO produtoDAO = new ProdutoDAO();
+			    tableUpdate(table_2, produtoDAO.listaProduto());
 			}
 		});
 		btnControleEstoque.setBounds(502, 527, 131, 23);
@@ -691,6 +757,8 @@ public class MercadoWindow {
 			public void actionPerformed(ActionEvent e) {
 				CardLayout c2 = (CardLayout)(group_panel.getLayout());
 			    c2.show(group_panel, "pesquisa_panel");
+			    ProdutoDAO produtoDAO = new ProdutoDAO();
+			    tableUpdate(table_1, produtoDAO.listaProduto());
 			}
 		});
 		btnPesquisa.setBounds(236, 527, 131, 23);

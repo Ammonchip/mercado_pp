@@ -44,4 +44,35 @@ public class ProdutoDAO extends BancoDeDados {
 		}
 		
 	}
+	
+	public Boolean remProduto(Produto produto) {
+		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
+				Statement statement = conn.createStatement();) {
+			statement.execute("USE mercadodb;");
+			statement.executeUpdate("DELETE FROM produtos WHERE codigo = '"+produto.getCodigo()+"';");
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Falha na conexão");
+			return false;
+		}
+	}
+
+	public boolean atuProduto(Produto produto) {
+		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
+				Statement statement = conn.createStatement();) {
+			statement.execute("USE mercadodb;");
+			statement.execute("UPDATE produtos SET descricao='"+produto.getDescricao()+
+														 "', venda="+Float.toString(produto.getVenda())+
+														 ", quantidade="+Integer.toString(produto.getQuantidade())+
+														 ", medida='"+produto.getMedida()+
+														 "', compra="+Float.toString(produto.getCompra())+
+														 " WHERE codigo = '"+produto.getCodigo()+"';");
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Falha na conexão");
+			return false;
+		}
+	}
 }

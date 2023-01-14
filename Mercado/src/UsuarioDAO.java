@@ -10,7 +10,7 @@ public class UsuarioDAO extends BancoDeDados{
 		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
 				Statement statement = conn.createStatement();) {
 			statement.execute("USE mercadodb;");
-			ResultSet rs = statement.executeQuery("SELECT * FROM usuariosdb WHERE usuario='"+ nome +"';");
+			ResultSet rs = statement.executeQuery("SELECT * FROM usuarios WHERE usuario='"+ nome +"';");
 			if (rs.next()) {
 				return new Usuario(rs.getString(2), rs.getString(3));
 			} else return null;

@@ -30,6 +30,14 @@ public class BancoDeDados {
 										"usuario VARCHAR(20)," +
 										"senha VARCHAR(20));");
 				statement.execute("INSERT INTO usuarios VALUES (NULL, \"admin\", \"admin\"), (NULL, \"operador\", \"1234\");");
+				statement.execute("CREATE TABLE produtos ("
+						+ "						id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,"
+						+ "                        codigo varchar(20),"
+						+ "                        descricao varchar(100),"
+						+ "                        venda float,"
+						+ "                        quantidade int,"
+						+ "                        medida varchar(10),"
+						+ "                        compra float);");
 			}
 		     
 			System.out.println("Connected!"); 
