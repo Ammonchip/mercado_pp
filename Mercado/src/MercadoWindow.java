@@ -12,6 +12,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
@@ -28,12 +30,12 @@ public class MercadoWindow {
 	private JTextField textField_4;
 	private JTable table_2;
 	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
-	private JTextField textField_10;
-	private JTextField textField_11;
+	private JTextField textConCod;
+	private JTextField textConDesc;
+	private JTextField textConVen;
+	private JTextField textConQuant;
+	private JTextField textConMed;
+	private JTextField textConCom;
 	private JTextField textField_12;
 	private JTextField textField_13;
 	private JTextField textField_14;
@@ -41,6 +43,23 @@ public class MercadoWindow {
 	private JTextField textField_16;
 	private JTextField textField_17;
 	private JTable table_3;
+	private Usuario usuario = null;
+	
+	private void tableUpdate(JTable tabela, ArrayList<Produto> listadeprodutos) {
+		
+		DefaultTableModel DFT = (DefaultTableModel) tabela.getModel();
+		DFT.setRowCount(0);
+		Vector v2 = new Vector();
+		for (int i = 0; i < listadeprodutos.size(); i++) {
+            v2.add(listadeprodutos.get(i).getCodigo());
+            v2.add(listadeprodutos.get(i).getDescricao());
+            v2.add(listadeprodutos.get(i).getVenda());
+            v2.add(listadeprodutos.get(i).getQuantidade());
+            v2.add(listadeprodutos.get(i).getMedida());
+            v2.add(listadeprodutos.get(i).getCompra());
+        }
+        DFT.addRow(v2);
+	}
 
 	/**
 	 * Create the application.
@@ -59,6 +78,7 @@ public class MercadoWindow {
 		frmMercadinhoArrochado.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMercadinhoArrochado.getContentPane().setLayout(new CardLayout());
 		
+		
 		JPanel login_panel = new JPanel();
 		login_panel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		frmMercadinhoArrochado.getContentPane().add(login_panel, "login_panel");
@@ -73,29 +93,7 @@ public class MercadoWindow {
 		menu_panel.add(group_panel);
 		group_panel.setLayout(new CardLayout(0, 0));
 		
-		JButton btnLoginButton = new JButton("Login");
-		btnLoginButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String senha = new String(passwordField.getPassword()).trim();
-				String str_usuario = usuario_textField.getText();
-				UsuariosDAO usuarioDAO = new UsuariosDAO();
-				Usuario usuario = usuarioDAO.getUsuario(str_usuario);
-				if (usuario != null) {
-					if (usuario.getSenha().equals(senha)) {
-						JOptionPane.showMessageDialog(btnLoginButton, "Bem vindo "+usuario.getNome());
-						CardLayout cl = (CardLayout)(frmMercadinhoArrochado.getContentPane().getLayout());
-					    cl.show(frmMercadinhoArrochado.getContentPane(), "menu_panel");
-					    
-					    CardLayout c2 = (CardLayout)(group_panel.getLayout());
-					    c2.show(group_panel, "venda_panel");
-					} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
-				} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
-				
-			}
-		});
 		
-		btnLoginButton.setBounds(277, 358, 297, 42);
-		login_panel.add(btnLoginButton);
 		
 		usuario_textField = new JTextField();
 		usuario_textField.setBounds(396, 252, 178, 42);
@@ -121,36 +119,8 @@ public class MercadoWindow {
 		passwordField.setBounds(396, 305, 178, 42);
 		login_panel.add(passwordField);
 		
-		
-		
-		JButton btnNewButton = new JButton("Logout");
-		btnNewButton.setBounds(10, 527, 83, 23);
-		menu_panel.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Compra de Produtos");
-		btnNewButton_1.setBounds(643, 527, 131, 23);
-		menu_panel.add(btnNewButton_1);
-		
-		JButton btnNewButton_2 = new JButton("Venda de Produtos");
-		btnNewButton_2.setBounds(103, 527, 123, 23);
-		menu_panel.add(btnNewButton_2);
-		
-		JButton btnNewButton_3 = new JButton("Controle de Estoque");
-		btnNewButton_3.setBounds(502, 527, 131, 23);
-		menu_panel.add(btnNewButton_3);
-		
-		JButton btnNewButton_4 = new JButton("Relatório");
-		btnNewButton_4.setBounds(377, 527, 115, 23);
-		menu_panel.add(btnNewButton_4);
-		
-		JButton btnNewButton_5 = new JButton("Lista de Produtos");
-		btnNewButton_5.setBounds(236, 527, 131, 23);
-		menu_panel.add(btnNewButton_5);
-		
-		
-		
 		JPanel venda_panel = new JPanel();
-		group_panel.add(venda_panel, "name_51328974069800");
+		group_panel.add(venda_panel, "venda_panel");
 		venda_panel.setLayout(null);
 		
 		JLabel lblNewLabel_3 = new JLabel("Venda de Produtos");
@@ -167,10 +137,6 @@ public class MercadoWindow {
 		lblNewLabel_4.setBounds(10, 42, 46, 14);
 		venda_panel.add(lblNewLabel_4);
 		
-		JButton btnNewButton_6 = new JButton("Adicionar");
-		btnNewButton_6.setBounds(651, 38, 89, 23);
-		venda_panel.add(btnNewButton_6);
-		
 		textField_2 = new JTextField();
 		textField_2.setBounds(561, 39, 67, 20);
 		venda_panel.add(textField_2);
@@ -180,29 +146,29 @@ public class MercadoWindow {
 		lblNewLabel_5.setBounds(496, 42, 55, 14);
 		venda_panel.add(lblNewLabel_5);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Débito");
-		rdbtnNewRadioButton.setBounds(10, 466, 73, 23);
-		venda_panel.add(rdbtnNewRadioButton);
+		JRadioButton rdbtnDebito = new JRadioButton("Débito");
+		rdbtnDebito.setBounds(10, 466, 73, 23);
+		venda_panel.add(rdbtnDebito);
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Crédito");
-		rdbtnNewRadioButton_1.setBounds(85, 466, 67, 23);
-		venda_panel.add(rdbtnNewRadioButton_1);
+		JRadioButton rdbtnCredito = new JRadioButton("Crédito");
+		rdbtnCredito.setBounds(85, 466, 67, 23);
+		venda_panel.add(rdbtnCredito);
 		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Dinheiro");
-		rdbtnNewRadioButton_2.setBounds(154, 466, 73, 23);
-		venda_panel.add(rdbtnNewRadioButton_2);
+		JRadioButton rdbtnDinheiro = new JRadioButton("Dinheiro");
+		rdbtnDinheiro.setBounds(154, 466, 73, 23);
+		venda_panel.add(rdbtnDinheiro);
 		
 		JLabel lblNewLabel_9 = new JLabel("Forma de Pagamento:");
 		lblNewLabel_9.setBounds(10, 446, 119, 14);
 		venda_panel.add(lblNewLabel_9);
 		
 		textField_3 = new JTextField();
-		textField_3.setBounds(272, 468, 86, 20);
+		textField_3.setBounds(249, 467, 109, 20);
 		venda_panel.add(textField_3);
 		textField_3.setColumns(10);
 		
 		JLabel lblNewLabel_10 = new JLabel("Total Pagamento:");
-		lblNewLabel_10.setBounds(272, 446, 86, 14);
+		lblNewLabel_10.setBounds(249, 446, 109, 14);
 		venda_panel.add(lblNewLabel_10);
 		
 		JLabel lblNewLabel_11 = new JLabel("Troco:");
@@ -212,10 +178,6 @@ public class MercadoWindow {
 		JLabel lblNewLabel_12 = new JLabel("0,00");
 		lblNewLabel_12.setBounds(368, 471, 46, 14);
 		venda_panel.add(lblNewLabel_12);
-		
-		JButton btnNewButton_7 = new JButton("Finalizar");
-		btnNewButton_7.setBounds(651, 446, 89, 44);
-		venda_panel.add(btnNewButton_7);
 		
 		JLabel lblNewLabel_13 = new JLabel("Preço Total:");
 		lblNewLabel_13.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -272,7 +234,7 @@ public class MercadoWindow {
 		scrollPane.setViewportView(table);
 		
 		JPanel pesquisa_panel = new JPanel();
-		group_panel.add(pesquisa_panel, "name_51340619506300");
+		group_panel.add(pesquisa_panel, "pesquisa_panel");
 		pesquisa_panel.setLayout(null);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -324,7 +286,7 @@ public class MercadoWindow {
 		pesquisa_panel.add(lblNewLabel_16_1);
 		
 		JPanel relatorio_panel = new JPanel();
-		group_panel.add(relatorio_panel, "name_51479119860400");
+		group_panel.add(relatorio_panel, "relatorio_panel");
 		relatorio_panel.setLayout(null);
 		
 		JLabel lblNewLabel_8 = new JLabel("Relatório de Compras e Vendas:");
@@ -350,7 +312,7 @@ public class MercadoWindow {
 		scrollPane_2.setViewportView(txtarea);
 		
 		JPanel controle_panel = new JPanel();
-		group_panel.add(controle_panel, "name_51486577709700");
+		group_panel.add(controle_panel, "controle_panel");
 		controle_panel.setLayout(null);
 		
 		JLabel lblNewLabel_8_1 = new JLabel("Controle de Estoque");
@@ -399,113 +361,101 @@ public class MercadoWindow {
 		lblNewLabel_6_1.setBounds(20, 281, 98, 17);
 		controle_panel.add(lblNewLabel_6_1);
 		
-		textField_6 = new JTextField();
-		textField_6.setBounds(122, 312, 249, 20);
-		controle_panel.add(textField_6);
-		textField_6.setColumns(10);
+		textConCod = new JTextField();
+		textConCod.setBounds(122, 312, 249, 20);
+		controle_panel.add(textConCod);
+		textConCod.setColumns(10);
 		
 		JLabel lblNewLabel_17 = new JLabel("Código");
-		lblNewLabel_17.setBounds(85, 315, 33, 14);
+		lblNewLabel_17.setBounds(39, 315, 79, 14);
 		controle_panel.add(lblNewLabel_17);
 		
-		textField_7 = new JTextField();
-		textField_7.setBounds(122, 343, 249, 20);
-		controle_panel.add(textField_7);
-		textField_7.setColumns(10);
+		textConDesc = new JTextField();
+		textConDesc.setBounds(122, 343, 249, 20);
+		controle_panel.add(textConDesc);
+		textConDesc.setColumns(10);
 		
 		JLabel lblNewLabel_18 = new JLabel("Descrição");
-		lblNewLabel_18.setBounds(72, 346, 46, 14);
+		lblNewLabel_18.setBounds(39, 346, 79, 14);
 		controle_panel.add(lblNewLabel_18);
 		
-		textField_8 = new JTextField();
-		textField_8.setBounds(122, 375, 249, 20);
-		controle_panel.add(textField_8);
-		textField_8.setColumns(10);
+		textConVen = new JTextField();
+		textConVen.setBounds(122, 375, 249, 20);
+		controle_panel.add(textConVen);
+		textConVen.setColumns(10);
 		
 		JLabel lblNewLabel_19 = new JLabel("Venda");
-		lblNewLabel_19.setBounds(88, 378, 30, 14);
+		lblNewLabel_19.setBounds(39, 378, 79, 14);
 		controle_panel.add(lblNewLabel_19);
 		
-		textField_9 = new JTextField();
-		textField_9.setBounds(498, 312, 256, 20);
-		controle_panel.add(textField_9);
-		textField_9.setColumns(10);
+		textConQuant = new JTextField();
+		textConQuant.setBounds(498, 312, 256, 20);
+		controle_panel.add(textConQuant);
+		textConQuant.setColumns(10);
 		
-		textField_10 = new JTextField();
-		textField_10.setColumns(10);
-		textField_10.setBounds(498, 343, 256, 20);
-		controle_panel.add(textField_10);
+		textConMed = new JTextField();
+		textConMed.setColumns(10);
+		textConMed.setBounds(498, 343, 256, 20);
+		controle_panel.add(textConMed);
 		
-		textField_11 = new JTextField();
-		textField_11.setColumns(10);
-		textField_11.setBounds(498, 375, 256, 20);
-		controle_panel.add(textField_11);
+		textConCom = new JTextField();
+		textConCom.setColumns(10);
+		textConCom.setBounds(498, 375, 256, 20);
+		controle_panel.add(textConCom);
 		
 		JLabel lblNewLabel_20 = new JLabel("Quantidade");
-		lblNewLabel_20.setBounds(432, 315, 56, 14);
+		lblNewLabel_20.setBounds(409, 315, 79, 14);
 		controle_panel.add(lblNewLabel_20);
 		
 		JLabel lblNewLabel_21 = new JLabel("Medida");
-		lblNewLabel_21.setBounds(449, 346, 39, 14);
+		lblNewLabel_21.setBounds(409, 346, 79, 14);
 		controle_panel.add(lblNewLabel_21);
 		
 		JLabel lblNewLabel_22 = new JLabel("Compra");
-		lblNewLabel_22.setBounds(449, 378, 39, 14);
+		lblNewLabel_22.setBounds(409, 378, 79, 14);
 		controle_panel.add(lblNewLabel_22);
 		
-		JButton btnNewButton_8 = new JButton("Adicionar");
-		btnNewButton_8.setBounds(122, 418, 89, 23);
-		controle_panel.add(btnNewButton_8);
-		
-		JButton btnNewButton_9 = new JButton("Remover");
-		btnNewButton_9.setBounds(221, 418, 89, 23);
-		controle_panel.add(btnNewButton_9);
-		
-		JButton btnNewButton_10 = new JButton("Atualizar");
-		btnNewButton_10.setBounds(320, 418, 89, 23);
-		controle_panel.add(btnNewButton_10);
-		
 		JPanel compra_panel = new JPanel();
-		group_panel.add(compra_panel, "name_51490585531500");
+		group_panel.add(compra_panel, "compra_panel");
 		compra_panel.setLayout(null);
 		
 		textField_12 = new JTextField();
 		textField_12.setColumns(10);
-		textField_12.setBounds(60, 424, 249, 20);
+		textField_12.setBounds(87, 424, 249, 20);
 		compra_panel.add(textField_12);
 		
 		JLabel lblNewLabel_19_1 = new JLabel("Venda");
-		lblNewLabel_19_1.setBounds(26, 427, 30, 14);
+		lblNewLabel_19_1.setBounds(26, 427, 51, 14);
 		compra_panel.add(lblNewLabel_19_1);
 		
 		JLabel lblNewLabel_18_1 = new JLabel("Descrição");
-		lblNewLabel_18_1.setBounds(10, 395, 46, 14);
+		lblNewLabel_18_1.setBounds(10, 395, 67, 14);
 		compra_panel.add(lblNewLabel_18_1);
 		
 		textField_13 = new JTextField();
 		textField_13.setColumns(10);
-		textField_13.setBounds(60, 392, 249, 20);
+		textField_13.setBounds(87, 393, 249, 20);
 		compra_panel.add(textField_13);
 		
 		textField_14 = new JTextField();
 		textField_14.setColumns(10);
-		textField_14.setBounds(60, 361, 249, 20);
+		textField_14.setBounds(87, 361, 249, 20);
 		compra_panel.add(textField_14);
 		
 		JLabel lblNewLabel_17_1 = new JLabel("Código");
-		lblNewLabel_17_1.setBounds(23, 364, 33, 14);
+		lblNewLabel_17_1.setBounds(23, 364, 54, 14);
 		compra_panel.add(lblNewLabel_17_1);
 		
 		JLabel lblNewLabel_20_1 = new JLabel("Quantidade");
-		lblNewLabel_20_1.setBounds(370, 364, 56, 14);
+		lblNewLabel_20_1.setBounds(359, 364, 67, 14);
 		compra_panel.add(lblNewLabel_20_1);
 		
 		JLabel lblNewLabel_21_1 = new JLabel("Medida");
-		lblNewLabel_21_1.setBounds(387, 395, 39, 14);
+		lblNewLabel_21_1.setBounds(359, 395, 67, 14);
 		compra_panel.add(lblNewLabel_21_1);
 		
 		JLabel lblNewLabel_22_1 = new JLabel("Compra");
-		lblNewLabel_22_1.setBounds(387, 427, 39, 14);
+		lblNewLabel_22_1.setBounds(359, 427, 67, 14);
 		compra_panel.add(lblNewLabel_22_1);
 		
 		textField_15 = new JTextField();
@@ -548,10 +498,6 @@ public class MercadoWindow {
 		lblNewLabel_14_1.setBounds(109, 455, 89, 39);
 		compra_panel.add(lblNewLabel_14_1);
 		
-		JButton btnNewButton_7_1 = new JButton("Comprar e Adicionar");
-		btnNewButton_7_1.setBounds(625, 454, 129, 44);
-		compra_panel.add(btnNewButton_7_1);
-		
 		JScrollPane scrollPane_2_1_1 = new JScrollPane();
 		scrollPane_2_1_1.setBounds(10, 42, 744, 228);
 		compra_panel.add(scrollPane_2_1_1);
@@ -586,35 +532,172 @@ public class MercadoWindow {
 		scrollPane_2_1_1.setViewportView(table_3);
 		
 		JLabel lblNewLabel_23 = new JLabel("Saldo:");
-		lblNewLabel_23.setBounds(10, 281, 46, 14);
+		lblNewLabel_23.setBounds(26, 281, 89, 14);
 		compra_panel.add(lblNewLabel_23);
 		
 		JLabel lblNewLabel_24 = new JLabel("Valor Financeiro em Produtos:");
-		lblNewLabel_24.setBounds(100, 281, 143, 14);
+		lblNewLabel_24.setBounds(173, 281, 170, 14);
 		compra_panel.add(lblNewLabel_24);
 		
 		JLabel lblNewLabel_25 = new JLabel("Quantidade de Produtos:");
-		lblNewLabel_25.setBounds(290, 281, 129, 14);
+		lblNewLabel_25.setBounds(398, 281, 149, 14);
 		compra_panel.add(lblNewLabel_25);
 		
 		JLabel lblNewLabel_26 = new JLabel("Lucro Total:");
-		lblNewLabel_26.setBounds(436, 281, 63, 14);
+		lblNewLabel_26.setBounds(588, 281, 83, 14);
 		compra_panel.add(lblNewLabel_26);
 		
 		JLabel lblNewLabel_27 = new JLabel("0,00");
-		lblNewLabel_27.setBounds(10, 306, 46, 14);
+		lblNewLabel_27.setBounds(26, 306, 89, 14);
 		compra_panel.add(lblNewLabel_27);
 		
 		JLabel lblNewLabel_27_1 = new JLabel("0,00");
-		lblNewLabel_27_1.setBounds(100, 306, 46, 14);
+		lblNewLabel_27_1.setBounds(173, 306, 170, 14);
 		compra_panel.add(lblNewLabel_27_1);
 		
 		JLabel lblNewLabel_27_2 = new JLabel("0");
-		lblNewLabel_27_2.setBounds(290, 306, 46, 14);
+		lblNewLabel_27_2.setBounds(398, 306, 149, 14);
 		compra_panel.add(lblNewLabel_27_2);
 		
 		JLabel lblNewLabel_27_3 = new JLabel("0,00");
-		lblNewLabel_27_3.setBounds(436, 306, 46, 14);
+		lblNewLabel_27_3.setBounds(588, 306, 83, 14);
 		compra_panel.add(lblNewLabel_27_3);
+		
+		JButton btnLoginButton = new JButton("Login");
+		btnLoginButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String senha = new String(passwordField.getPassword()).trim();
+				String str_usuario = usuario_textField.getText();
+				UsuarioDAO usuarioDAO = new UsuarioDAO();
+				usuario = usuarioDAO.getUsuario(str_usuario);
+				if (usuario != null) {
+					if (usuario.getSenha().equals(senha)) {
+						JOptionPane.showMessageDialog(btnLoginButton, "Bem vindo "+usuario.getNome());
+						lblNewLabel_16.setText(usuario.getNome());
+						lblNewLabel_16_1.setText(usuario.getNome());
+						lblNewLabel_16_1_1.setText(usuario.getNome());
+						lblNewLabel_16_1_1_1.setText(usuario.getNome());
+						lblNewLabel_16_1_1_1_1.setText(usuario.getNome());
+						
+						
+						usuario_textField.setText("");
+						passwordField.setText("");
+						CardLayout cl = (CardLayout)(frmMercadinhoArrochado.getContentPane().getLayout());
+					    cl.show(frmMercadinhoArrochado.getContentPane(), "menu_panel");
+					    
+					    CardLayout c2 = (CardLayout)(group_panel.getLayout());
+					    c2.show(group_panel, "venda_panel");
+					} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
+				} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
+				
+			}
+		});
+		btnLoginButton.setBounds(277, 358, 297, 42);
+		login_panel.add(btnLoginButton);
+		
+		JButton btnCompraEAdd = new JButton("Comprar e Adicionar");
+		btnCompraEAdd.setBounds(584, 454, 170, 44);
+		compra_panel.add(btnCompraEAdd);
+		
+		JButton btnAddControle = new JButton("Adicionar");
+		btnAddControle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Produto produto = new Produto(textConCod.getText(), 
+											  textConDesc.getText(), 
+											  textConMed.getText(), 
+											  Integer.parseInt(textConQuant.getText()),
+											  Float.parseFloat(textConCom.getText()),
+											  Float.parseFloat(textConVen.getText()));
+				
+				ProdutoDAO produtoDAO = new ProdutoDAO();
+				if (produtoDAO.addProduto(produto)) {
+					JOptionPane.showMessageDialog(btnAddControle, "Produto adicionado!");
+					tableUpdate(table_2, produtoDAO.listaProduto());
+					
+					}
+				else JOptionPane.showMessageDialog(btnAddControle, "Falha ao adicionar produto!");
+				
+			}
+		});
+		btnAddControle.setBounds(122, 418, 89, 23);
+		controle_panel.add(btnAddControle);
+		
+		JButton btnRemControle = new JButton("Remover");
+		btnRemControle.setBounds(221, 418, 89, 23);
+		controle_panel.add(btnRemControle);
+		
+		JButton btnAtuControle = new JButton("Atualizar");
+		btnAtuControle.setBounds(320, 418, 89, 23);
+		controle_panel.add(btnAtuControle);
+		
+		JButton btnFinalizarVenda = new JButton("Finalizar");
+		btnFinalizarVenda.setBounds(651, 446, 89, 44);
+		venda_panel.add(btnFinalizarVenda);
+		
+		JButton btnLogout = new JButton("Logout");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(btnLoginButton, "Até mais "+usuario.getNome());
+				CardLayout cl = (CardLayout)(frmMercadinhoArrochado.getContentPane().getLayout());
+				usuario = null;
+			    cl.show(frmMercadinhoArrochado.getContentPane(), "login_panel");
+			}
+		});
+		btnLogout.setBounds(10, 527, 83, 23);
+		menu_panel.add(btnLogout);
+		
+		JButton btnCompra = new JButton("Compra ");
+		btnCompra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout c2 = (CardLayout)(group_panel.getLayout());
+			    c2.show(group_panel, "compra_panel");
+			}
+		});
+		btnCompra.setBounds(643, 527, 131, 23);
+		menu_panel.add(btnCompra);
+		
+		JButton btnVenda = new JButton("Venda ");
+		btnVenda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout c2 = (CardLayout)(group_panel.getLayout());
+			    c2.show(group_panel, "venda_panel");
+			}
+		});
+		btnVenda.setBounds(103, 527, 123, 23);
+		menu_panel.add(btnVenda);
+		
+		JButton btnControleEstoque = new JButton("Controle");
+		btnControleEstoque.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout c2 = (CardLayout)(group_panel.getLayout());
+			    c2.show(group_panel, "controle_panel");
+			}
+		});
+		btnControleEstoque.setBounds(502, 527, 131, 23);
+		menu_panel.add(btnControleEstoque);
+		
+		JButton btnRelatorio = new JButton("Relatório");
+		btnRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout c2 = (CardLayout)(group_panel.getLayout());
+			    c2.show(group_panel, "relatorio_panel");
+			}
+		});
+		btnRelatorio.setBounds(377, 527, 115, 23);
+		menu_panel.add(btnRelatorio);
+		
+		JButton btnPesquisa = new JButton("Pesquisar");
+		btnPesquisa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout c2 = (CardLayout)(group_panel.getLayout());
+			    c2.show(group_panel, "pesquisa_panel");
+			}
+		});
+		btnPesquisa.setBounds(236, 527, 131, 23);
+		menu_panel.add(btnPesquisa);
+		
+		JButton btnAddVenda = new JButton("Adicionar");
+		btnAddVenda.setBounds(651, 38, 89, 23);
+		venda_panel.add(btnAddVenda);
 	}
 }

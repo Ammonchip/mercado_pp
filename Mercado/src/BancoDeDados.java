@@ -1,6 +1,5 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,20 +12,26 @@ public class BancoDeDados {
 	
 	public static void Inicializa() {
 		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
+				ResultSet resultSet = conn.getMetaData().getCatalogs();
 				Statement statement = conn.createStatement();){
-			statement.execute("CREATE DATABASE IF NOT EXISTS MercadoDB;");
-			statement.execute("USE MercadoDB;");
-			statement.execute("CREATE TABLE IF NOT EXISTS usuariosDB (" +
-									"id INT NOT NULL PRIMARY KEY AUTO_INCREMENT," +
-			                        "usuario VARCHAR(20)," +
-			                        "senha VARCHAR(20));");
-			//statement.execute("INSERT INTO usuariosDB VALUES (NULL, \"admin\", \"admin\"), (NULL, \"operador\", \"1234\");");
-		
+			Boolean achou = false;
+			while (resultSet.next() && !achou) {
+				// Get the database name, which is at position 1
+				String databaseName = resultSet.getString(1);
+				System.out.println(databaseName);
+				if(databaseName.equals("mercadodb")) achou = true;
+			}
 			
-			
-			
+			if(!achou) {
+				statement.execute("CREATE DATABASE MercadoDB;");
+				statement.execute("USE MercadoDB;");
+				statement.execute("CREATE TABLE usuarios (" +
+										"id INT NOT NULL PRIMARY KEY AUTO_INCREMENT," +
+										"usuario VARCHAR(20)," +
+										"senha VARCHAR(20));");
+				statement.execute("INSERT INTO usuarios VALUES (NULL, \"admin\", \"admin\"), (NULL, \"operador\", \"1234\");");
+			}
 		     
-		    // code to execute SQL queries goes here...
 			System.out.println("Connected!"); 
 			} catch (SQLException ex) {
 				System.out.println("Connection Failed!");
