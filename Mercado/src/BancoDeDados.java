@@ -29,6 +29,7 @@ public class BancoDeDados {
 										"id INT NOT NULL PRIMARY KEY AUTO_INCREMENT," +
 										"usuario VARCHAR(20)," +
 										"senha VARCHAR(20));");
+				
 				statement.execute("INSERT INTO usuarios VALUES (NULL, \"admin\", \"admin\"), (NULL, \"operador\", \"1234\");");
 				statement.execute("CREATE TABLE produtos ("
 						+ "						id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,"
@@ -38,6 +39,26 @@ public class BancoDeDados {
 						+ "                        quantidade int,"
 						+ "                        medida varchar(10),"
 						+ "                        compra float);");
+				
+				statement.execute("CREATE TABLE listadevendas (\r\n"
+						+ "						id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,\r\n"
+						+ "                        forma_pagamento VARCHAR(20),\r\n"
+						+ "                        total_pagamento float,\r\n"
+						+ "                        preco_total float,\r\n"
+						+ "                        troco float);");
+				
+				statement.execute("CREATE TABLE vendas (\r\n"
+						+ "  id int NOT NULL PRIMARY KEY AUTO_INCREMENT,\r\n"
+						+ "  listadevendas_id int,\r\n"
+						+ "  codigo varchar(20) DEFAULT NULL,\r\n"
+						+ "  descricao varchar(100) DEFAULT NULL,\r\n"
+						+ "  venda float DEFAULT NULL,\r\n"
+						+ "  quantidade int DEFAULT NULL,\r\n"
+						+ "  medida varchar(10) DEFAULT NULL,\r\n"
+						+ "  compra float DEFAULT NULL,\r\n"
+						+ "  FOREIGN KEY (listadevendas_id) REFERENCES listadevendas(id)\r\n"
+						+ ")");
+				
 			}
 		     
 			System.out.println("Connected!"); 

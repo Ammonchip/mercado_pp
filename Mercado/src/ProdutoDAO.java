@@ -75,4 +75,21 @@ public class ProdutoDAO extends BancoDeDados {
 			return false;
 		}
 	}
+	
+	public Produto BuscaProduto(String codigo) {
+		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
+				Statement statement = conn.createStatement();) {
+			statement.execute("USE mercadodb;");
+			ResultSet rs = statement.executeQuery("SELECT * FROM produtos where codigo='"+codigo+"';");
+			Produto produto = null;
+			while (rs.next()) {
+				produto = new Produto(rs.getString(2), rs.getString(3), rs.getString(6), rs.getInt(5), rs.getFloat(7), rs.getFloat(4));
+		    }
+			return produto;
+
+		} catch (SQLException e) {
+			System.out.println("Falha na conexão");
+			return null;
+		}
+	}
 }

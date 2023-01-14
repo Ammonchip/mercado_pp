@@ -18,19 +18,20 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
+import javax.swing.ButtonGroup;
 
 public class MercadoWindow {
 
 	public JFrame frmMercadinhoArrochado;
 	private JTextField usuario_textField;
 	private JPasswordField passwordField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTable table;
-	private JTable table_1;
+	private JTextField textField_vendaCod;
+	private JTextField textField_vendaQuant;
+	private JTextField textField_vendaTotalPag;
+	private JTable table_venda;
+	private JTable table_pesquisa;
 	private JTextField textField_4;
-	private JTable table_2;
+	private JTable table_controle;
 	private JTextField textField_5;
 	private JTextField textConCod;
 	private JTextField textConDesc;
@@ -38,14 +39,15 @@ public class MercadoWindow {
 	private JTextField textConQuant;
 	private JTextField textConMed;
 	private JTextField textConCom;
-	private JTextField textField_12;
-	private JTextField textField_13;
-	private JTextField textField_14;
-	private JTextField textField_15;
-	private JTextField textField_16;
-	private JTextField textField_17;
-	private JTable table_3;
+	private JTextField textField_compraVen;
+	private JTextField textField_compraDesc;
+	private JTextField textField_compraCod;
+	private JTextField textField_compraQuant;
+	private JTextField textField_compraMed;
+	private JTextField textField_compraCompra;
+	private JTable table_compra;
 	private Usuario usuario = null;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 	private void tableUpdate(JTable tabela, ArrayList<Produto> listadeprodutos) {
 		
@@ -132,33 +134,36 @@ public class MercadoWindow {
 		lblNewLabel_3.setBounds(10, 11, 169, 20);
 		venda_panel.add(lblNewLabel_3);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(56, 39, 430, 20);
-		venda_panel.add(textField_1);
-		textField_1.setColumns(10);
+		textField_vendaCod = new JTextField();
+		textField_vendaCod.setBounds(56, 39, 430, 20);
+		venda_panel.add(textField_vendaCod);
+		textField_vendaCod.setColumns(10);
 		
 		JLabel lblNewLabel_4 = new JLabel("Código:");
 		lblNewLabel_4.setBounds(10, 42, 46, 14);
 		venda_panel.add(lblNewLabel_4);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(561, 39, 67, 20);
-		venda_panel.add(textField_2);
-		textField_2.setColumns(10);
+		textField_vendaQuant = new JTextField();
+		textField_vendaQuant.setBounds(561, 39, 67, 20);
+		venda_panel.add(textField_vendaQuant);
+		textField_vendaQuant.setColumns(10);
 		
 		JLabel lblNewLabel_5 = new JLabel("Quatidade:");
 		lblNewLabel_5.setBounds(496, 42, 55, 14);
 		venda_panel.add(lblNewLabel_5);
 		
 		JRadioButton rdbtnDebito = new JRadioButton("Débito");
+		buttonGroup.add(rdbtnDebito);
 		rdbtnDebito.setBounds(10, 466, 73, 23);
 		venda_panel.add(rdbtnDebito);
 		
 		JRadioButton rdbtnCredito = new JRadioButton("Crédito");
+		buttonGroup.add(rdbtnCredito);
 		rdbtnCredito.setBounds(85, 466, 67, 23);
 		venda_panel.add(rdbtnCredito);
 		
 		JRadioButton rdbtnDinheiro = new JRadioButton("Dinheiro");
+		buttonGroup.add(rdbtnDinheiro);
 		rdbtnDinheiro.setBounds(154, 466, 73, 23);
 		venda_panel.add(rdbtnDinheiro);
 		
@@ -166,10 +171,10 @@ public class MercadoWindow {
 		lblNewLabel_9.setBounds(10, 446, 119, 14);
 		venda_panel.add(lblNewLabel_9);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(249, 467, 109, 20);
-		venda_panel.add(textField_3);
-		textField_3.setColumns(10);
+		textField_vendaTotalPag = new JTextField();
+		textField_vendaTotalPag.setBounds(249, 467, 109, 20);
+		venda_panel.add(textField_vendaTotalPag);
+		textField_vendaTotalPag.setColumns(10);
 		
 		JLabel lblNewLabel_10 = new JLabel("Total Pagamento:");
 		lblNewLabel_10.setBounds(249, 446, 109, 14);
@@ -188,10 +193,10 @@ public class MercadoWindow {
 		lblNewLabel_13.setBounds(428, 446, 89, 39);
 		venda_panel.add(lblNewLabel_13);
 		
-		JLabel lblNewLabel_14 = new JLabel("0,00");
-		lblNewLabel_14.setFont(new Font("Tahoma", Font.ITALIC, 12));
-		lblNewLabel_14.setBounds(527, 446, 89, 39);
-		venda_panel.add(lblNewLabel_14);
+		JLabel lblVendaPrecoTotal = new JLabel("0,00");
+		lblVendaPrecoTotal.setFont(new Font("Tahoma", Font.ITALIC, 12));
+		lblVendaPrecoTotal.setBounds(527, 446, 89, 39);
+		venda_panel.add(lblVendaPrecoTotal);
 		
 		JLabel lblNewLabel_15 = new JLabel("Usuário:");
 		lblNewLabel_15.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -207,8 +212,8 @@ public class MercadoWindow {
 		scrollPane.setBounds(10, 70, 730, 365);
 		venda_panel.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		table_venda = new JTable();
+		table_venda.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -228,14 +233,14 @@ public class MercadoWindow {
 				return columnEditables[column];
 			}
 		});
-		table.getColumnModel().getColumn(0).setResizable(false);
-		table.getColumnModel().getColumn(0).setPreferredWidth(100);
-		table.getColumnModel().getColumn(1).setResizable(false);
-		table.getColumnModel().getColumn(1).setPreferredWidth(150);
-		table.getColumnModel().getColumn(2).setResizable(false);
-		table.getColumnModel().getColumn(3).setResizable(false);
-		table.getColumnModel().getColumn(4).setResizable(false);
-		scrollPane.setViewportView(table);
+		table_venda.getColumnModel().getColumn(0).setResizable(false);
+		table_venda.getColumnModel().getColumn(0).setPreferredWidth(100);
+		table_venda.getColumnModel().getColumn(1).setResizable(false);
+		table_venda.getColumnModel().getColumn(1).setPreferredWidth(150);
+		table_venda.getColumnModel().getColumn(2).setResizable(false);
+		table_venda.getColumnModel().getColumn(3).setResizable(false);
+		table_venda.getColumnModel().getColumn(4).setResizable(false);
+		scrollPane.setViewportView(table_venda);
 		
 		JPanel pesquisa_panel = new JPanel();
 		group_panel.add(pesquisa_panel, "pesquisa_panel");
@@ -245,8 +250,8 @@ public class MercadoWindow {
 		scrollPane_1.setBounds(10, 70, 730, 365);
 		pesquisa_panel.add(scrollPane_1);
 		
-		table_1 = new JTable();
-		table_1.setModel(new DefaultTableModel(
+		table_pesquisa = new JTable();
+		table_pesquisa.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -260,14 +265,14 @@ public class MercadoWindow {
 				return columnTypes[columnIndex];
 			}
 		});
-		table_1.getColumnModel().getColumn(0).setPreferredWidth(100);
-		table_1.getColumnModel().getColumn(1).setPreferredWidth(150);
-		DefaultTableModel table_1model = (DefaultTableModel) table_1.getModel();
+		table_pesquisa.getColumnModel().getColumn(0).setPreferredWidth(100);
+		table_pesquisa.getColumnModel().getColumn(1).setPreferredWidth(150);
+		DefaultTableModel table_1model = (DefaultTableModel) table_pesquisa.getModel();
 		TableRowSorter<DefaultTableModel> sorter;
 		sorter = new TableRowSorter<DefaultTableModel>(table_1model);
-		table_1.setRowSorter(sorter);
+		table_pesquisa.setRowSorter(sorter);
 		
-		scrollPane_1.setViewportView(table_1);
+		scrollPane_1.setViewportView(table_pesquisa);
 		
 		JLabel lblNewLabel_6 = new JLabel("Filtro de Busca:");
 		lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -281,8 +286,6 @@ public class MercadoWindow {
 		textField_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				
-				JOptionPane.showMessageDialog(null, "funcionou!");
 				RowFilter<DefaultTableModel, Object> rf = null;
 		        //If current expression doesn't parse, don't update.
 		        try {
@@ -359,8 +362,8 @@ public class MercadoWindow {
 		scrollPane_2_1.setBounds(10, 42, 744, 228);
 		controle_panel.add(scrollPane_2_1);
 		
-		table_2 = new JTable();
-		table_2.setModel(new DefaultTableModel(
+		table_controle = new JTable();
+		table_controle.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -374,7 +377,7 @@ public class MercadoWindow {
 				return columnTypes[columnIndex];
 			}
 		});
-		scrollPane_2_1.setViewportView(table_2);
+		scrollPane_2_1.setViewportView(table_controle);
 		
 		textField_5 = new JTextField();
 		textField_5.setColumns(10);
@@ -444,10 +447,10 @@ public class MercadoWindow {
 		group_panel.add(compra_panel, "compra_panel");
 		compra_panel.setLayout(null);
 		
-		textField_12 = new JTextField();
-		textField_12.setColumns(10);
-		textField_12.setBounds(87, 424, 249, 20);
-		compra_panel.add(textField_12);
+		textField_compraVen = new JTextField();
+		textField_compraVen.setColumns(10);
+		textField_compraVen.setBounds(87, 424, 249, 20);
+		compra_panel.add(textField_compraVen);
 		
 		JLabel lblNewLabel_19_1 = new JLabel("Venda");
 		lblNewLabel_19_1.setBounds(26, 427, 51, 14);
@@ -457,15 +460,28 @@ public class MercadoWindow {
 		lblNewLabel_18_1.setBounds(10, 395, 67, 14);
 		compra_panel.add(lblNewLabel_18_1);
 		
-		textField_13 = new JTextField();
-		textField_13.setColumns(10);
-		textField_13.setBounds(87, 393, 249, 20);
-		compra_panel.add(textField_13);
+		textField_compraDesc = new JTextField();
+		textField_compraDesc.setColumns(10);
+		textField_compraDesc.setBounds(87, 393, 249, 20);
+		compra_panel.add(textField_compraDesc);
 		
-		textField_14 = new JTextField();
-		textField_14.setColumns(10);
-		textField_14.setBounds(87, 361, 249, 20);
-		compra_panel.add(textField_14);
+		textField_compraCod = new JTextField();
+		textField_compraCod.setColumns(10);
+		textField_compraCod.setBounds(87, 361, 249, 20);
+		compra_panel.add(textField_compraCod);
+		textField_compraCod.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ProdutoDAO produtoDAO = new ProdutoDAO();
+				Produto produto = produtoDAO.BuscaProduto(textField_compraCod.getText());
+				if(produto != null) {
+					textField_compraDesc.setText(produto.getDescricao());
+					textField_compraVen.setText(Float.toString(produto.getVenda()));
+					textField_compraMed.setText(produto.getMedida());
+					textField_compraCompra.setText(Float.toString(produto.getCompra()));
+					textField_compraQuant.setText(Integer.toString(produto.getQuantidade()));
+				}
+			}
+		});
 		
 		JLabel lblNewLabel_17_1 = new JLabel("Código");
 		lblNewLabel_17_1.setBounds(23, 364, 54, 14);
@@ -483,20 +499,20 @@ public class MercadoWindow {
 		lblNewLabel_22_1.setBounds(359, 427, 67, 14);
 		compra_panel.add(lblNewLabel_22_1);
 		
-		textField_15 = new JTextField();
-		textField_15.setColumns(10);
-		textField_15.setBounds(436, 361, 256, 20);
-		compra_panel.add(textField_15);
+		textField_compraQuant = new JTextField();
+		textField_compraQuant.setColumns(10);
+		textField_compraQuant.setBounds(436, 361, 256, 20);
+		compra_panel.add(textField_compraQuant);
 		
-		textField_16 = new JTextField();
-		textField_16.setColumns(10);
-		textField_16.setBounds(436, 392, 256, 20);
-		compra_panel.add(textField_16);
+		textField_compraMed = new JTextField();
+		textField_compraMed.setColumns(10);
+		textField_compraMed.setBounds(436, 392, 256, 20);
+		compra_panel.add(textField_compraMed);
 		
-		textField_17 = new JTextField();
-		textField_17.setColumns(10);
-		textField_17.setBounds(436, 424, 256, 20);
-		compra_panel.add(textField_17);
+		textField_compraCompra = new JTextField();
+		textField_compraCompra.setColumns(10);
+		textField_compraCompra.setBounds(436, 424, 256, 20);
+		compra_panel.add(textField_compraCompra);
 		
 		JLabel lblNewLabel_16_1_1_1_1 = new JLabel("Operador");
 		lblNewLabel_16_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -527,8 +543,8 @@ public class MercadoWindow {
 		scrollPane_2_1_1.setBounds(10, 42, 744, 228);
 		compra_panel.add(scrollPane_2_1_1);
 		
-		table_3 = new JTable();
-		table_3.setModel(new DefaultTableModel(
+		table_compra = new JTable();
+		table_compra.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -548,13 +564,13 @@ public class MercadoWindow {
 				return columnEditables[column];
 			}
 		});
-		table_3.getColumnModel().getColumn(0).setResizable(false);
-		table_3.getColumnModel().getColumn(1).setResizable(false);
-		table_3.getColumnModel().getColumn(2).setResizable(false);
-		table_3.getColumnModel().getColumn(3).setResizable(false);
-		table_3.getColumnModel().getColumn(4).setResizable(false);
-		table_3.getColumnModel().getColumn(5).setResizable(false);
-		scrollPane_2_1_1.setViewportView(table_3);
+		table_compra.getColumnModel().getColumn(0).setResizable(false);
+		table_compra.getColumnModel().getColumn(1).setResizable(false);
+		table_compra.getColumnModel().getColumn(2).setResizable(false);
+		table_compra.getColumnModel().getColumn(3).setResizable(false);
+		table_compra.getColumnModel().getColumn(4).setResizable(false);
+		table_compra.getColumnModel().getColumn(5).setResizable(false);
+		scrollPane_2_1_1.setViewportView(table_compra);
 		
 		JLabel lblNewLabel_23 = new JLabel("Saldo:");
 		lblNewLabel_23.setBounds(26, 281, 89, 14);
@@ -621,6 +637,28 @@ public class MercadoWindow {
 		login_panel.add(btnLoginButton);
 		
 		JButton btnCompraEAdd = new JButton("Comprar e Adicionar");
+		btnCompraEAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ProdutoDAO produtoDAO = new ProdutoDAO();
+				Produto produto = produtoDAO.BuscaProduto(textField_compraCod.getText());
+				if (produto != null) {
+					produto.setQuantidade(produto.getQuantidade() + Integer.parseInt(textField_compraQuant.getText()));
+					produtoDAO.atuProduto(produto);
+					tableUpdate(table_compra, produtoDAO.listaProduto());
+					JOptionPane.showMessageDialog(null, "Compra efetuada!");
+				} else {
+					produto = new Produto(textField_compraCod.getText(), 
+										  textField_compraDesc.getText(), 
+										  textField_compraMed.getText(), 
+										  Integer.parseInt(textField_compraQuant.getText()), 
+										  Float.parseFloat(textField_compraCompra.getText()), 
+										  Float.parseFloat(textField_compraVen.getText()));
+					produtoDAO.addProduto(produto);
+					tableUpdate(table_compra,produtoDAO.listaProduto());
+					
+				}
+			}
+		});
 		btnCompraEAdd.setBounds(584, 454, 170, 44);
 		compra_panel.add(btnCompraEAdd);
 		
@@ -637,7 +675,7 @@ public class MercadoWindow {
 				ProdutoDAO produtoDAO = new ProdutoDAO();
 				if (produtoDAO.addProduto(produto)) {
 					JOptionPane.showMessageDialog(btnAddControle, "Produto adicionado!");
-					tableUpdate(table_2, produtoDAO.listaProduto());
+					tableUpdate(table_controle, produtoDAO.listaProduto());
 					
 					}
 				else JOptionPane.showMessageDialog(btnAddControle, "Falha ao adicionar produto!");
@@ -660,7 +698,7 @@ public class MercadoWindow {
 				ProdutoDAO produtoDAO = new ProdutoDAO();
 				if (produtoDAO.remProduto(produto)) {
 				JOptionPane.showMessageDialog(btnAddControle, "Produto removido!");
-				tableUpdate(table_2, produtoDAO.listaProduto());
+				tableUpdate(table_controle, produtoDAO.listaProduto());
 
 				}
 				else JOptionPane.showMessageDialog(btnAddControle, "Falha ao remover produto!");
@@ -682,7 +720,7 @@ public class MercadoWindow {
 				ProdutoDAO produtoDAO = new ProdutoDAO();
 				if (produtoDAO.atuProduto(produto)) {
 				JOptionPane.showMessageDialog(btnAddControle, "Produto Atualizado!");
-				tableUpdate(table_2, produtoDAO.listaProduto());
+				tableUpdate(table_controle, produtoDAO.listaProduto());
 
 				}
 				else JOptionPane.showMessageDialog(btnAddControle, "Falha ao atualizar produto!");
@@ -712,6 +750,8 @@ public class MercadoWindow {
 			public void actionPerformed(ActionEvent e) {
 				CardLayout c2 = (CardLayout)(group_panel.getLayout());
 			    c2.show(group_panel, "compra_panel");
+			    ProdutoDAO produtoDAO = new ProdutoDAO();
+			    tableUpdate(table_compra, produtoDAO.listaProduto());
 			}
 		});
 		btnCompra.setBounds(643, 527, 131, 23);
@@ -724,7 +764,7 @@ public class MercadoWindow {
 			    c2.show(group_panel, "venda_panel");
 			    
 			    ProdutoDAO produtoDAO = new ProdutoDAO();
-				tableUpdate(table_2, produtoDAO .listaProduto());
+				tableUpdate(table_controle, produtoDAO .listaProduto());
 			}
 		});
 		btnVenda.setBounds(103, 527, 123, 23);
@@ -736,7 +776,7 @@ public class MercadoWindow {
 				CardLayout c2 = (CardLayout)(group_panel.getLayout());
 			    c2.show(group_panel, "controle_panel");
 			    ProdutoDAO produtoDAO = new ProdutoDAO();
-			    tableUpdate(table_2, produtoDAO.listaProduto());
+			    tableUpdate(table_controle, produtoDAO.listaProduto());
 			}
 		});
 		btnControleEstoque.setBounds(502, 527, 131, 23);
@@ -758,13 +798,18 @@ public class MercadoWindow {
 				CardLayout c2 = (CardLayout)(group_panel.getLayout());
 			    c2.show(group_panel, "pesquisa_panel");
 			    ProdutoDAO produtoDAO = new ProdutoDAO();
-			    tableUpdate(table_1, produtoDAO.listaProduto());
+			    tableUpdate(table_pesquisa, produtoDAO.listaProduto());
 			}
 		});
 		btnPesquisa.setBounds(236, 527, 131, 23);
 		menu_panel.add(btnPesquisa);
 		
 		JButton btnAddVenda = new JButton("Adicionar");
+		btnAddVenda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
 		btnAddVenda.setBounds(651, 38, 89, 23);
 		venda_panel.add(btnAddVenda);
 	}
