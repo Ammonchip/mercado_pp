@@ -1,4 +1,10 @@
 
+/**
+ * Classe Produto - Representa os produtos do super mercado
+ * @author Paulo Freitas &lt;paulo.freitas@icomp.ufam.edu.br&gt;
+ * @version 1.00, 2023-01-15
+ */
+
 public class Produto {
 	private String 
 		codigo,
@@ -10,6 +16,15 @@ public class Produto {
 		compra, 
 		venda;
 	
+	/**
+     * Construtor da classe.
+     * @param codigo 
+     * @param descricao
+     * @param medida 
+     * @param quantidade
+     * @param compra
+     * @param venda
+     */
 	public Produto(String codigo, String descricao, String medida, int quantidade, float compra, float venda) {
 		this.codigo = codigo;
 		this.descricao = descricao;

@@ -49,6 +49,12 @@ public class MercadoWindow {
 	private Usuario usuario = null;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
+	/**
+     * Atualiza valores na tabela de pesquisa e controle
+     * 
+     */
+
+	
 	private void tableUpdate(JTable tabela, ArrayList<Produto> listadeprodutos) {
 		
 		DefaultTableModel DFT = (DefaultTableModel) tabela.getModel();
@@ -61,7 +67,30 @@ public class MercadoWindow {
             v2.add(listadeprodutos.get(i).getVenda());
             v2.add(listadeprodutos.get(i).getQuantidade());
             v2.add(listadeprodutos.get(i).getMedida());
-            v2.add(listadeprodutos.get(i).getCompra());
+            v2.add(listadeprodutos.get(i).getCompra()); 
+            DFT.addRow(v2);
+        }
+        
+	}
+
+	
+	/**
+     * Atualiza valores na tabela de venda
+     * 
+     */
+
+	private void table_vendaUpdate(JTable tabela, ArrayList<Produto> listadeprodutos) {
+		
+		DefaultTableModel DFT = (DefaultTableModel) tabela.getModel();
+		DFT.setRowCount(0);
+		
+		for (int i = 0; i < listadeprodutos.size(); i++) {
+			Vector v2 = new Vector();
+            v2.add(listadeprodutos.get(i).getCodigo());
+            v2.add(listadeprodutos.get(i).getDescricao());
+            v2.add(listadeprodutos.get(i).getVenda());
+            v2.add(listadeprodutos.get(i).getQuantidade());
+            v2.add(listadeprodutos.get(i).getMedida());
             DFT.addRow(v2);
         }
         
@@ -153,16 +182,19 @@ public class MercadoWindow {
 		venda_panel.add(lblNewLabel_5);
 		
 		JRadioButton rdbtnDebito = new JRadioButton("Débito");
+		rdbtnDebito.setActionCommand("Débito");
 		buttonGroup.add(rdbtnDebito);
 		rdbtnDebito.setBounds(10, 466, 73, 23);
 		venda_panel.add(rdbtnDebito);
 		
 		JRadioButton rdbtnCredito = new JRadioButton("Crédito");
+		rdbtnCredito.setActionCommand("Crédito");
 		buttonGroup.add(rdbtnCredito);
 		rdbtnCredito.setBounds(85, 466, 67, 23);
 		venda_panel.add(rdbtnCredito);
 		
 		JRadioButton rdbtnDinheiro = new JRadioButton("Dinheiro");
+		rdbtnDinheiro.setActionCommand("Dinheiro");
 		buttonGroup.add(rdbtnDinheiro);
 		rdbtnDinheiro.setBounds(154, 466, 73, 23);
 		venda_panel.add(rdbtnDinheiro);
@@ -170,11 +202,6 @@ public class MercadoWindow {
 		JLabel lblNewLabel_9 = new JLabel("Forma de Pagamento:");
 		lblNewLabel_9.setBounds(10, 446, 119, 14);
 		venda_panel.add(lblNewLabel_9);
-		
-		textField_vendaTotalPag = new JTextField();
-		textField_vendaTotalPag.setBounds(249, 467, 109, 20);
-		venda_panel.add(textField_vendaTotalPag);
-		textField_vendaTotalPag.setColumns(10);
 		
 		JLabel lblNewLabel_10 = new JLabel("Total Pagamento:");
 		lblNewLabel_10.setBounds(249, 446, 109, 14);
@@ -184,19 +211,31 @@ public class MercadoWindow {
 		lblNewLabel_11.setBounds(368, 446, 46, 14);
 		venda_panel.add(lblNewLabel_11);
 		
-		JLabel lblNewLabel_12 = new JLabel("0,00");
-		lblNewLabel_12.setBounds(368, 471, 46, 14);
-		venda_panel.add(lblNewLabel_12);
+		JLabel lbl_vendaTroco = new JLabel("0.00");
+		lbl_vendaTroco.setBounds(368, 471, 46, 14);
+		venda_panel.add(lbl_vendaTroco);
 		
 		JLabel lblNewLabel_13 = new JLabel("Preço Total:");
 		lblNewLabel_13.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblNewLabel_13.setBounds(428, 446, 89, 39);
 		venda_panel.add(lblNewLabel_13);
 		
-		JLabel lblVendaPrecoTotal = new JLabel("0,00");
+		JLabel lblVendaPrecoTotal = new JLabel("0.00");
 		lblVendaPrecoTotal.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		lblVendaPrecoTotal.setBounds(527, 446, 89, 39);
 		venda_panel.add(lblVendaPrecoTotal);
+		
+		
+		textField_vendaTotalPag = new JTextField();
+		textField_vendaTotalPag.setBounds(249, 467, 109, 20);
+		venda_panel.add(textField_vendaTotalPag);
+		textField_vendaTotalPag.setColumns(10);
+		textField_vendaTotalPag.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				float troco = Float.parseFloat(lblVendaPrecoTotal.getText()) - Float.parseFloat(textField_vendaTotalPag.getText());
+				lbl_vendaTroco.setText(Float.toString(troco));
+			}
+		});
 		
 		JLabel lblNewLabel_15 = new JLabel("Usuário:");
 		lblNewLabel_15.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -271,7 +310,6 @@ public class MercadoWindow {
 		TableRowSorter<DefaultTableModel> sorter;
 		sorter = new TableRowSorter<DefaultTableModel>(table_1model);
 		table_pesquisa.setRowSorter(sorter);
-		
 		scrollPane_1.setViewportView(table_pesquisa);
 		
 		JLabel lblNewLabel_6 = new JLabel("Filtro de Busca:");
@@ -379,9 +417,27 @@ public class MercadoWindow {
 		});
 		scrollPane_2_1.setViewportView(table_controle);
 		
+		DefaultTableModel table_2model = (DefaultTableModel) table_controle.getModel();
+		TableRowSorter<DefaultTableModel> sorter2 = new TableRowSorter<DefaultTableModel>(table_2model);
+		table_controle.setRowSorter(sorter2);
+		
 		textField_5 = new JTextField();
 		textField_5.setColumns(10);
 		textField_5.setBounds(122, 281, 632, 20);
+		textField_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				RowFilter<DefaultTableModel, Object> rf = null;
+		        //If current expression doesn't parse, don't update.
+		        try {
+		            rf = RowFilter.regexFilter(textField_5.getText(), 0);
+		        } catch (java.util.regex.PatternSyntaxException ex) {
+		            return;
+		        }
+		        sorter2.setRowFilter(rf);
+				
+			}
+		});
 		controle_panel.add(textField_5);
 		
 		JLabel lblNewLabel_6_1 = new JLabel("Filtro de Busca:");
@@ -604,37 +660,7 @@ public class MercadoWindow {
 		lblNewLabel_27_3.setBounds(588, 306, 83, 14);
 		compra_panel.add(lblNewLabel_27_3);
 		
-		JButton btnLoginButton = new JButton("Login");
-		btnLoginButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String senha = new String(passwordField.getPassword()).trim();
-				String str_usuario = usuario_textField.getText();
-				UsuarioDAO usuarioDAO = new UsuarioDAO();
-				usuario = usuarioDAO.getUsuario(str_usuario);
-				if (usuario != null) {
-					if (usuario.getSenha().equals(senha)) {
-						JOptionPane.showMessageDialog(btnLoginButton, "Bem vindo "+usuario.getNome());
-						lblNewLabel_16.setText(usuario.getNome());
-						lblNewLabel_16_1.setText(usuario.getNome());
-						lblNewLabel_16_1_1.setText(usuario.getNome());
-						lblNewLabel_16_1_1_1.setText(usuario.getNome());
-						lblNewLabel_16_1_1_1_1.setText(usuario.getNome());
-						
-						
-						usuario_textField.setText("");
-						passwordField.setText("");
-						CardLayout cl = (CardLayout)(frmMercadinhoArrochado.getContentPane().getLayout());
-					    cl.show(frmMercadinhoArrochado.getContentPane(), "menu_panel");
-					    
-					    CardLayout c2 = (CardLayout)(group_panel.getLayout());
-					    c2.show(group_panel, "venda_panel");
-					} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
-				} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
-				
-			}
-		});
-		btnLoginButton.setBounds(277, 358, 297, 42);
-		login_panel.add(btnLoginButton);
+		
 		
 		JButton btnCompraEAdd = new JButton("Comprar e Adicionar");
 		btnCompraEAdd.addActionListener(new ActionListener() {
@@ -730,20 +756,34 @@ public class MercadoWindow {
 		controle_panel.add(btnAtuControle);
 		
 		JButton btnFinalizarVenda = new JButton("Finalizar");
+		btnFinalizarVenda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListaDeVendasDAO listadevendasDAO = new ListaDeVendasDAO();
+				System.out.println(buttonGroup.getSelection().getActionCommand());
+				ListaDeVendas listadevendas = new ListaDeVendas(listadevendasDAO.listaVendas().size(), 
+																buttonGroup.getSelection().getActionCommand(), 
+																Float.parseFloat(textField_vendaTotalPag.getText()), 
+																Float.parseFloat(lblVendaPrecoTotal.getText()), 
+																Float.parseFloat(lbl_vendaTroco.getText()));
+				listadevendasDAO.atuListaDeVendas(listadevendas);
+				listadevendasDAO.addNewListaDeVendas();
+				DefaultTableModel model = (DefaultTableModel) table_venda.getModel();
+				model.setRowCount(0);
+				buttonGroup.clearSelection();
+				lblVendaPrecoTotal.setText("0.00");
+				lbl_vendaTroco.setText("0.00");
+				textField_vendaTotalPag.setText("");
+				textField_vendaQuant.setText("");
+				textField_vendaCod.setText("");
+				
+				
+				
+				
+			}
+		});
 		btnFinalizarVenda.setBounds(651, 446, 89, 44);
 		venda_panel.add(btnFinalizarVenda);
 		
-		JButton btnLogout = new JButton("Logout");
-		btnLogout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(btnLoginButton, "Até mais "+usuario.getNome());
-				CardLayout cl = (CardLayout)(frmMercadinhoArrochado.getContentPane().getLayout());
-				usuario = null;
-			    cl.show(frmMercadinhoArrochado.getContentPane(), "login_panel");
-			}
-		});
-		btnLogout.setBounds(10, 527, 83, 23);
-		menu_panel.add(btnLogout);
 		
 		JButton btnCompra = new JButton("Compra ");
 		btnCompra.addActionListener(new ActionListener() {
@@ -781,6 +821,7 @@ public class MercadoWindow {
 		});
 		btnControleEstoque.setBounds(502, 527, 131, 23);
 		menu_panel.add(btnControleEstoque);
+		btnControleEstoque.setEnabled(true);
 		
 		JButton btnRelatorio = new JButton("Relatório");
 		btnRelatorio.addActionListener(new ActionListener() {
@@ -807,10 +848,92 @@ public class MercadoWindow {
 		JButton btnAddVenda = new JButton("Adicionar");
 		btnAddVenda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO
+				ProdutoDAO produtoDAO = new ProdutoDAO();
+				Produto produto = produtoDAO.BuscaProduto(textField_vendaCod.getText());
+				VendasDAO vendasDAO = new VendasDAO();
+				
+				if (produto == null) {
+					JOptionPane.showMessageDialog(null, "Produto não encontrado!");
+				} else if (produto.getQuantidade() < Integer.parseInt(textField_vendaQuant.getText())) {
+					JOptionPane.showMessageDialog(null, "Quantidade acima do estoque!");
+				} else {
+					
+					ListaDeVendasDAO listadevendasDAO = new ListaDeVendasDAO();
+					ListaDeVendas listadevendas = listadevendasDAO.listaVendas().get(listadevendasDAO.listaVendas().size() - 1);
+					
+					produto.setQuantidade(Integer.parseInt(textField_vendaQuant.getText()));
+					if (vendasDAO.addProduto(produto, listadevendas)) {
+						
+						table_vendaUpdate(table_venda, vendasDAO.listaProduto(listadevendas));
+						ArrayList<Produto> lista_v = vendasDAO.listaProduto(listadevendas);
+						float precototal = 0;
+						for(int i = 0; i < lista_v.size(); i++) {
+							precototal = precototal + lista_v.get(i).getVenda();
+							
+						}
+						lblVendaPrecoTotal.setText(Float.toString(precototal));
+						
+						
+						
+					} else JOptionPane.showMessageDialog(btnAddControle, "Falha ao adicionar produto!");
+				}
+				
+				
 			}
 		});
 		btnAddVenda.setBounds(651, 38, 89, 23);
 		venda_panel.add(btnAddVenda);
+		
+		JButton btnLoginButton = new JButton("Login");
+		btnLoginButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String senha = new String(passwordField.getPassword()).trim();
+				String str_usuario = usuario_textField.getText();
+				UsuarioDAO usuarioDAO = new UsuarioDAO();
+				usuario = usuarioDAO.getUsuario(str_usuario);
+				if (usuario != null) {
+					if (usuario.getSenha().equals(senha)) {
+						JOptionPane.showMessageDialog(btnLoginButton, "Bem vindo "+usuario.getNome());
+						lblNewLabel_16.setText(usuario.getNome());
+						lblNewLabel_16_1.setText(usuario.getNome());
+						lblNewLabel_16_1_1.setText(usuario.getNome());
+						lblNewLabel_16_1_1_1.setText(usuario.getNome());
+						lblNewLabel_16_1_1_1_1.setText(usuario.getNome());
+						
+						if (usuario.getNome().equals("operador")) {
+							btnCompra.setEnabled(false);
+							btnRelatorio.setEnabled(false);
+							btnControleEstoque.setEnabled(false);
+						} else {
+							btnCompra.setEnabled(true);
+							btnRelatorio.setEnabled(true);
+							btnControleEstoque.setEnabled(true);
+						}
+						usuario_textField.setText("");
+						passwordField.setText("");
+						CardLayout cl = (CardLayout)(frmMercadinhoArrochado.getContentPane().getLayout());
+					    cl.show(frmMercadinhoArrochado.getContentPane(), "menu_panel");
+					    
+					    CardLayout c2 = (CardLayout)(group_panel.getLayout());
+					    c2.show(group_panel, "venda_panel");
+					} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
+				} else JOptionPane.showMessageDialog(btnLoginButton, "Usuário ou Senha Incorreta!");
+				
+			}
+		});
+		btnLoginButton.setBounds(277, 358, 297, 42);
+		login_panel.add(btnLoginButton);
+		
+		JButton btnLogout = new JButton("Logout");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(btnLoginButton, "Até mais "+usuario.getNome());
+				CardLayout cl = (CardLayout)(frmMercadinhoArrochado.getContentPane().getLayout());
+				usuario = null;
+			    cl.show(frmMercadinhoArrochado.getContentPane(), "login_panel");
+			}
+		});
+		btnLogout.setBounds(10, 527, 83, 23);
+		menu_panel.add(btnLogout);
 	}
 }

@@ -5,8 +5,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+/**
+ * Classe ProdutoDAO - usada para acessar o banco de dados relaciodaos aos produtos
+ * @author Paulo Freitas &lt;paulo.freitas@icomp.ufam.edu.br&gt;
+ * @version 1.00, 2023-01-15
+ */
+
 public class ProdutoDAO extends BancoDeDados {
 
+	/**
+     * Adiciona um produto a base de dados
+     * @return Boolean
+     */
 	public Boolean addProduto(Produto produto) {
 		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
 				Statement statement = conn.createStatement();) {
@@ -25,7 +35,10 @@ public class ProdutoDAO extends BancoDeDados {
 			return false;
 		}
 	}
-	
+	/**
+     * retorna uma lista de produtos da base de dados
+     * @return ArrayList<Produto>
+     */
 	public ArrayList<Produto> listaProduto() {
 		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
 				Statement statement = conn.createStatement();) {
@@ -44,7 +57,10 @@ public class ProdutoDAO extends BancoDeDados {
 		}
 		
 	}
-	
+	/**
+     * remove um produto a base de dados
+     * @return Boolean
+     */
 	public Boolean remProduto(Produto produto) {
 		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
 				Statement statement = conn.createStatement();) {
@@ -58,6 +74,10 @@ public class ProdutoDAO extends BancoDeDados {
 		}
 	}
 
+	/**
+     * Atualiza um produto a base de dados
+     * @return Boolean
+     */
 	public boolean atuProduto(Produto produto) {
 		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
 				Statement statement = conn.createStatement();) {
@@ -75,7 +95,10 @@ public class ProdutoDAO extends BancoDeDados {
 			return false;
 		}
 	}
-	
+	/**
+     * Busca um produto a base de dados
+     * @return Boolean
+     */
 	public Produto BuscaProduto(String codigo) {
 		try (Connection conn = DriverManager.getConnection(dbURL, username, password);
 				Statement statement = conn.createStatement();) {

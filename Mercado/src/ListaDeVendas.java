@@ -1,3 +1,8 @@
+/**
+ * Classe ListaDeVendas - representa a lista de vendas geradas para o relatório
+ * @author Paulo Freitas &lt;paulo.freitas@icomp.ufam.edu.br&gt;
+ * @version 1.00, 2023-01-15
+ */
 
 public class ListaDeVendas {
 	private int id;
@@ -6,6 +11,23 @@ public class ListaDeVendas {
 	private float preco_total;
 	private float troco;
 	
+	
+	/**
+     * Construtor da classe.
+     * @param id id do produto
+     * @param forma_pagamento forma de pagamento
+     * @param total_pagamento total de pagamento
+     * @param preco_total preco total da venda
+     * @param troco troco do consumidor
+     */
+
+	public ListaDeVendas(int id, String forma_pagamento, float total_pagamento, float preco_total, float troco) {
+		this.setId(id);
+		this.setForma_pagamento(forma_pagamento);
+		this.setTotal_pagamento(total_pagamento);
+		this.setPreco_total(preco_total);
+		this.setTroco(troco);
+	}
 	public int getId() {
 		return id;
 	}
